@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlalchemy[asyncio]
+asyncpg
+alembic
+pydantic
+pydantic-settings
+aio-pika
+aiosmtplib
+httpx
+jinja2
+redis[hiredis]
+structlog
+pytest
+pytest-asyncio
