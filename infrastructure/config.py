@@ -1,11 +1,5 @@
 from functools import lru_cache
 from pydantic_settings import BaseSettings
-import os
-
-@lru_cache
-def get_env_filename():
-    runtime_env = os.getenv('ENV')
-    return '.env' if runtime_env else '.env'
 
 class EnvironmentSettings(BaseSettings):
     # PostgreSQL
@@ -34,8 +28,8 @@ class EnvironmentSettings(BaseSettings):
     RETRY_INITIAL_DELAY: int
 
     class Config:
-        env_file = get_env_filename()
-        env_file_enconding = 'utf-8'
+        env_file = ".env"
+        env_file_encoding = 'utf-8'
 
 @lru_cache
 def get_environment_variable():
