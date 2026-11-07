@@ -5,7 +5,7 @@ from domain.events.base_event import DomainEvent
 from domain.value_objects.channel import Channel
 from domain.value_objects.priority import Priority
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, kw_only=True)
 class NotificationCreated(DomainEvent):
     recipient_id: uuid.UUID
     channel: Channel

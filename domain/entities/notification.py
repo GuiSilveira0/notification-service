@@ -47,6 +47,7 @@ class Notification:
         self._domain_events = []
 
         self._add_event(NotificationCreated(
+            notification_id=self.id,
             recipient_id=self.recipient.id,
             channel=self.channel,
             priority=self.priority,
