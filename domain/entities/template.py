@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from domain.value_objects.channel import Channel
 
 class Template:
@@ -16,8 +16,8 @@ class Template:
         self.channel = channel
         self.subject_template = subject_template
         self.body_template = body_template
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        self.created_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
 
     def update(
             self, 
@@ -28,7 +28,7 @@ class Template:
         self.name = name
         self.body_template = body_template
         self.subject_template = subject_template
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.now(timezone.utc)
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Template):

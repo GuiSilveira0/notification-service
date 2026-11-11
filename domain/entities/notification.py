@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 from domain.events.base_event import DomainEvent
 from domain.events.notification_cancelled import NotificationCancelled
 from domain.events.notification_created import NotificationCreated
@@ -42,8 +42,8 @@ class Notification:
         self.sent_at = None
         self.failed_at = None
         self.failure_reason = None
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        self.created_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
         self._domain_events = []
 
         self._add_event(NotificationCreated(
@@ -82,7 +82,7 @@ class Notification:
 
     def mark_as_sent(self):
         self._transition_to(Status.SENT)
-        self.sent_at = datetime.now()
+        self.sent_at = datetime.now(timezone.utc)
         self._add_event(NotificationSent(
             sent_at=self.sent_at,
             notification_id=self.id,
@@ -90,7 +90,7 @@ class Notification:
 
     def mark_as_failed(self, reason: str):
         self._transition_to(Status.FAILED)
-        self.failed_at = datetime.now()
+        self.failed_at = datetime.now(timezone.utc)
         self.failure_reason = reason
         self._add_event(NotificationFailed(
             notification_id=self.id,
@@ -125,7 +125,7 @@ class Notification:
                 f"Transição inválida: {self.status.value} → {new_status.value}"
             )
         self.status = new_status
-        self.updated_at = datetime.now()
+        self.updated_at = datetime.now(timezone.utc)
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Notification):

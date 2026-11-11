@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from sqlalchemy import String, Integer, DateTime, JSON
+from sqlalchemy import String, Integer, DateTime, JSON, Index
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 class Base(DeclarativeBase):
@@ -8,6 +8,9 @@ class Base(DeclarativeBase):
 
 class NotificationModel(Base):
     __tablename__ = "notifications"
+    __table_args__ = (
+        Index("ix_notifications_status_scheduled_at", "status", "scheduled_at"),
+    )
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
     recipient_name: Mapped[str] = mapped_column(String(255))
     recipient_email: Mapped[str | None] = mapped_column(String(255))
@@ -23,19 +26,19 @@ class NotificationModel(Base):
     meta_data: Mapped[dict] = mapped_column("metadata", JSON, default=dict)
     attempts: Mapped[int] = mapped_column(Integer, default=0)
     max_attempts: Mapped[int] = mapped_column(Integer, default=3)
-    scheduled_at: Mapped[datetime | None] = mapped_column(DateTime)
-    sent_at: Mapped[datetime | None] = mapped_column(DateTime)
-    failed_at: Mapped[datetime | None] = mapped_column(DateTime)
+    scheduled_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    failed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     failure_reason: Mapped[str | None] = mapped_column(String)
-    created_at: Mapped[datetime] = mapped_column(DateTime)
-    updated_at: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 class TemplateModel(Base):
     __tablename__ = "templates"
     id: Mapped[uuid.UUID] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(255))
+    name: Mapped[str] = mapped_column(String(255), unique=True)
     channel: Mapped[str] = mapped_column(String(32))
     subject_template: Mapped[str | None] = mapped_column(String(998))
     body_template: Mapped[str] = mapped_column(String)
-    created_at: Mapped[datetime] = mapped_column(DateTime)
-    updated_at: Mapped[datetime] = mapped_column(DateTime)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
